@@ -98,7 +98,8 @@ func (repositorio Publicacoes) Curtir(publicacaoID uint64) error {
 func (repositorio Publicacoes) Descurtir(publicacaoID uint64) error {
 	resultado := repositorio.db.
 		Model(&modelos.Publicacao{}).
-		Where("id = ?", publicacaoID).
-		Updates(map[string]interface{}{"curtidas": gorm.Expr("curtidas - 1")})
+		Where("id = ? AND curtidas > 0", publicacaoID).
+		Update("curtidas", gorm.Expr("curtidas - 1"))
+
 	return resultado.Error
 }
